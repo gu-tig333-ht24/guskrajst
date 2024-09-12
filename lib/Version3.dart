@@ -70,7 +70,6 @@ class TodoHomePage extends StatelessWidget {
           _buildTodoItem('Gå på bio'),
           _buildTodoItem('Planera semester'),
           _buildTodoItem('Handla'), 
-          _buildTodoItem('Träffa vänner'), 
           // Dessa är alla uppgifter som visas på skärmen.
         ],
       ),
@@ -92,7 +91,7 @@ class TodoHomePage extends StatelessWidget {
   Widget _buildTodoItem(String title) {
     return ListTile(
       leading: const Icon(Icons.crop_square), 
-      // Den fyrkantiga ikonen som visas till vänster om varje uppgift.
+      // En fyrkantig ikon visas till vänster om varje uppgift.
 
       title: Text(
         title,
@@ -107,13 +106,9 @@ class TodoHomePage extends StatelessWidget {
         // En kryssikon till höger om uppgiften för att eventuellt ta bort den.
 
         onPressed: () {
-          // Här kan man lägga till funktionalitet för att ta bort uppgifter i framtiden.
+          // Här kan du lägga till funktionalitet för att ta bort uppgifter.
         },
       ),
     );
   }
 }
-
-
-
-
