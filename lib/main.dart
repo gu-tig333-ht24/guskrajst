@@ -32,7 +32,7 @@ class TodoHomePage extends StatefulWidget {
 
 class _TodoHomePageState extends State<TodoHomePage> {
   late Future<List<Todo>> futureTodos;  // Variabel för att hålla uppgifter från API:et
-  final String apiKey = '8da3d703-7633-408a-8c2d-5c2a346154bc';  // API-nyckel
+  final String apiKey = 'a934b506-93ee-4ce0-aad3-e4877e761707';  // Uppdaterad API-nyckel
   final String apiUrl = 'https://todoapp-api.apps.k8s.gu.se/todos';  // API URL för att hämta uppgifter
 
   @override
@@ -106,39 +106,14 @@ class _TodoHomePageState extends State<TodoHomePage> {
     }
   }
 
-  // Visar en dialogruta för att lägga till en ny uppgift
-  void _showAddTodoDialog() {
-    String newTask = '';
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Lägg till ny uppgift"),
-          content: TextField(
-            onChanged: (value) {
-              newTask = value;  // Sparar det användaren skriver
-            },
-            decoration: const InputDecoration(hintText: "Skriv in uppgiften"),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text("Lägg till"),
-              onPressed: () {
-                if (newTask.isNotEmpty) {
-                  addTodo(newTask);  // Lägger till uppgiften om den inte är tom
-                  Navigator.of(context).pop();  // Stänger dialogrutan
-                }
-              },
-            ),
-            ElevatedButton(
-              child: const Text("Avbryt"),
-              onPressed: () {
-                Navigator.of(context).pop();  // Stänger dialogrutan utan att göra något
-              },
-            ),
-          ],
-        );
-      },
+  // Navigerar till en ny sida för att lägga till en ny uppgift
+  void _navigateToAddTodoPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => AddTodoPage(onAdd: (task) {
+        if (task.isNotEmpty) {
+          addTodo(task);  // Lägger till uppgiften om den inte är tom
+        }
+      })),
     );
   }
 
@@ -255,9 +230,53 @@ class _TodoHomePageState extends State<TodoHomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddTodoDialog,  // Öppnar dialogrutan för att lägga till en ny uppgift
+        onPressed: _navigateToAddTodoPage,  // Öppnar ny sida för att lägga till en ny uppgift
         backgroundColor: Colors.blue[600],
         child: const Icon(Icons.add),  // Plusikon för att lägga till uppgifter
+      ),
+    );
+  }
+}
+
+// Ny skärm för att lägga till en ny uppgift
+class AddTodoPage extends StatelessWidget {
+  final Function(String) onAdd;
+
+  AddTodoPage({required this.onAdd});
+
+  @override
+  Widget build(BuildContext context) {
+    String newTask = '';
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lägg till uppgift'),
+        backgroundColor: Colors.blue[600],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              onChanged: (value) {
+                newTask = value;
+              },
+              decoration: const InputDecoration(
+                hintText: 'Vad vill du göra?',
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.add),
+              label: const Text('Lägg till'),
+              onPressed: () {
+                onAdd(newTask);  // Lägg till uppgiften via callback
+                Navigator.of(context).pop();  // Återvänd till todo-listan
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
